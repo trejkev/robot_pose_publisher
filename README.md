@@ -2,5 +2,6 @@
 Robot pose publisher node: It publishes a ROS topic with the robot pose at 150 samples per second for a TurtleBot3 Burger robot simulated through Gazebo.
 
 Assumptions:
+  
   Robot model name: 'turtlebot3_burger'  
   Reference model name: 'ground_plane'  
