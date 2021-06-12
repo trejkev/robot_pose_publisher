@@ -25,7 +25,7 @@ message         = PoseStamped()
 header          = Header()
 header.frame_id = '/turtlebot3_burger'
 
-rospy.init_node('robotPosePublisherNode')                                                     # Robot pose publisher node creation
+rospy.init_node('robotPosePublisher')                                                         # Robot pose publisher node creation
 robotPosePublisher = rospy.Publisher('/robotPosePublisher', PoseStamped, queue_size = 10)     # Robot pose publisher topic name, message type, and queue size statements
 rospy.wait_for_service('/gazebo/get_model_state')                                             # Waiting for gazebo service availability
 actualState = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)                    # Opening gazebo service for getting the robot state
