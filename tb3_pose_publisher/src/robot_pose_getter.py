@@ -16,7 +16,7 @@ from geometry_msgs.msg import PoseStamped                                       
 from gazebo_msgs.srv import GetModelState                                                     # Needed to use the gazebo service to get the model pose
 
 #Global variables
-samplingRate       = 150                                                                      # Samples per second to publish the robot pose
+samplingRate       = 20                                                                       # Samples per second to publish the robot pose
 robotModelName     = 'turtlebot3_burger'                                                      # Robot model name
 referenceModelName = 'ground_plane'                                                           # Reference model name
 
