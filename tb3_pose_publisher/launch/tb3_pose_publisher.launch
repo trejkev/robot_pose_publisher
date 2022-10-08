@@ -1,0 +1,14 @@
+<launch>
+    <arg name = "robot_name"           default = "turtlebot3_burger"    />
+    <arg name = "publisher_topic_name" default = "robotGTPosePublisher" />
+    <arg name = "reference_plane"      default = "ground_plane"         />
+    <arg name = "sampling_rate"        default = "20"                   />
+
+    <!-- Calling the node to publish the ground truth pose of the TurtleBot3 -->
+    <node pkg="tb3_pose_publisher" type="robot_pose_getter.py" name="robotPosePublisher">
+        <param name = "robot_name"           type = "str" value = "$(arg robot_name)"           />
+        <param name = "publisher_topic_name" type = "str" value = "$(arg publisher_topic_name)" />
+        <param name = "reference_plane"      type = "str" value = "$(arg reference_plane)"      />
+        <param name = "sampling_rate"        type = "int" value = "$(arg sampling_rate)"        />
+    </node>
+</launch>
