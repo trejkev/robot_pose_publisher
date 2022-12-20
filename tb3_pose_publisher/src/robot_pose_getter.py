@@ -18,39 +18,40 @@ header  = Header()
 ############################ -- ASSIGNING PARAMS -- ############################
 ################################################################################
 
-# -- Getting sampling rate from params
+samplingRate         = 20
+header.frame_id      = 'turtlebot3_burger'
+robotModelName       = 'turtlebot3_burger'
+publisher_topic_name = "robotGTPosePublisher"
+referenceModelName   = 'ground_plane'
+
 if rospy.has_param("~sampling_rate"):
     samplingRate = rospy.get_param("~sampling_rate")
-else:
-    samplingRate = 20
-# -- Getting robot name from params
 if rospy.has_param("~robot_name"):
     header.frame_id = robotModelName = rospy.get_param("~robot_name")
-else:
-    header.frame_id = robotModelName = 'turtlebot3_burger'  
-# -- Getting publisher topic name from params
 if rospy.has_param("~publisher_topic_name"):
     publisher_topic_name = rospy.get_param("~publisher_topic_name")
-else:
-    publisher_topic_name = "robotGTPosePublisher"
-# -- Getting reference plane from params
 if rospy.has_param("~reference_plane"):
     referenceModelName = rospy.get_param("~reference_plane")
-else:
-    referenceModelName = 'ground_plane'
 
 ################################################################################
 ############################# -- LAUNCHING TOPIC -- ############################
 ################################################################################
 
 Publisher = rospy.Publisher(publisher_topic_name, PoseStamped, queue_size = 10)
-rospy.wait_for_service('/gazebo/get_model_state')                               # Waiting for gazebo service availability
-actualState = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)      # Opening gazebo service for getting the robot state
 rate = rospy.Rate(samplingRate)                                                 # Samples per second to get the robot pose
+counter = 0
 while not rospy.is_shutdown():
-    result = actualState(robotModelName, referenceModelName)                    # Get the robotModelName state referenced to referenceModelName
-    message.pose   = result.pose
-    header.stamp   = rospy.Time.now()
-    message.header = header
-    Publisher.publish(message)                                                  # Publish on the topic the robot pose
+    rospy.wait_for_service('/gazebo/get_model_state')                           # Waiting for gazebo service availability
+    actualState = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)  # Opening gazebo service for getting the robot state
+    try:
+        result = actualState(robotModelName, referenceModelName)                # Get the robotModelName state referenced to referenceModelName
+        message.pose   = result.pose
+        header.stamp   = rospy.Time.now()
+        message.header = header
+        Publisher.publish(message)                                              # Publish on the topic the robot pose
+        counter += 1
+        rospy.loginfo("Published {} to {} model state, for the {} time".format(robotModelName, referenceModelName, counter))
+    except:
+        rospy.loginfo("Failed to get the actual state for robot {}".format(robotModelName))
+        pass
     rate.sleep()
